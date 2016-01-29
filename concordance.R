@@ -28,7 +28,7 @@ paste0("Concordance is calculated for SNP ",snp)
 plink <- read.table(file_plink_raw_typed, header=T,as.is=T)
 plink <- plink[,c(-1,-3:-6)]
 #remove underscore, to match impute SNP names
-colnames(plink) <- gsub(pattern="_.",replacement="",colnames(plink))
+colnames(plink) <- gsub(pattern="_.*",replacement="",colnames(plink))
 
 #read cambridge impute
 impute_sample <- read.table(file_impute_sample,
@@ -38,8 +38,10 @@ impute_gen <- read.table(file_impute_gen, quote="\"",as.is=T)
 
 #Convert posterior to dosage
 impute_gen12 <- impute_gen[,c(2:5)]
+
+Ncols <- length(impute_gen)
 impute_gen12 <- cbind(impute_gen12,
-                      sapply(seq(6,4145,3),
+                      sapply(seq(6,Ncols,3),
                              function(x) 
                                impute_gen[,x]*0+
                                impute_gen[,x+1]*1+
